@@ -1,0 +1,123 @@
+<div>
+    <div>
+        <?php
+            //messages
+            if ($this->messages) {
+                foreach ($this->messages as $message) {
+                    echo "<p class='error-msg'>$message</p>";
+                }
+            }
+            //add form
+            $form = $this->companyAddForm;
+            $form->prepare();
+
+            echo $this->form()->openTag($form);
+            echo "<div class='column pull-left'><label class='block' for='textCompany'>Company name</label>";
+            echo $this->formRow($form->get('company'));
+            echo "</div>";
+            echo "<div class='column pull-left'><label class='block' for='textFirstname'>Firstname</label>";
+            echo $this->formRow($form->get('firstname'));
+            echo "</div>";
+            echo "<div class='column pull-left'><label class='block' for='textLastname'>Lastname</label>";
+                echo $this->formRow($form->get('lastname'));
+            echo "</div>";
+            echo "<div class='column pull-left'><label class='block' for='textEmail'>Email address</label>";
+                echo $this->formRow($form->get('email'));
+            echo "</div>";
+            echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+            echo $this->formRow($form->get('submit'));
+            echo "</div>";
+            echo $this->form()->closeTag($form);
+        ?>
+    </div>
+    <table id="tblList" class="tbl">
+        <thead class="trHead">
+            <tr>
+                <th width="30%">Company Name</th>
+                <th width="15%">Firstname</th>
+                <th width="15%">Lastname</th>
+                <th width="35%">Email</th>
+                <!--<th width="15%">Action</th>-->
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="trItem"></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function(){
+        refreshList();
+    });
+
+    function refreshList()
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('company-list') ?>",
+            dataType: "json",
+            type    : "GET",
+            async   : false,
+            success : function(data) {
+                var i = 1;
+                $('.trItem').remove();
+                $.each(data, function(index, item){
+                    var itemHtml = "<tr class='trItem'>";
+                    itemHtml += "<td>"+item.company+"</td>";
+                    itemHtml += "<td>"+item.firstname+"</td>";
+                    itemHtml += "<td>"+item.lastname+"</td>";
+                    itemHtml += "<td>"+item.email+"</td>";
+                    //itemHtml += "<td>";
+                    //itemHtml += "<a class='linkUpdate' href='javascript:void(0)' qid='"+item.id+"' title='Edit'></a>";
+                    //itemHtml += "<a class='linkDelete' href='javascript:void(0)' qid='"+item.id+"' title='Delete'></a>";
+                    //itemHtml += "</td>";
+                    itemHtml += "</tr>";
+                    var newOption = $(itemHtml);
+                    $('#tblList').append(newOption);
+                    i++;
+                });
+                if (data.length <= 0) {
+                    var newOption = $("<tr><td colspan='5'>No items found !</td></tr>");
+                    $('#tblList').append(newOption);
+                }
+                initDeleteAction();
+                initDataTable();
+            }
+        });
+    }
+    function initDeleteAction()
+    {
+        $('.linkDelete').click(function(){
+            deleteItem($(this));
+        });
+    }
+    function deleteItem(qObj)
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('company-delete') ?>",
+            dataType: "json",
+            type    : "POST",
+            data    : "id="+ qObj.attr('qid'),
+            async   : false,
+            success : function(status) {
+                if (status) {
+                    //refreshList();
+                    $( location ).attr("href", "<?php echo $this->url('company-add') ?>");
+                } else {
+                    alert ("Error while deleting !");
+                }
+            }
+        });
+    }
+    function initDataTable()
+    {
+        $('#tblList').dataTable({
+            paginate : true,
+            ordering : true,
+            order : [],
+            info : true,
+            filter : true,
+            retrieve : true
+        });
+    }
+</script>

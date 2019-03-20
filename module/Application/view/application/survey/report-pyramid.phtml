@@ -1,0 +1,200 @@
+<?php
+
+$color['bgRed']    = array("main" => "#D0011B", "left" => "#E30823", "right" => "#C80018");
+$color['bgYellow'] = array("main" => "#F6A623", "left" => "#FFBC4B", "right" => "#F29F12");
+$color['bgGreen']  = array("main" => "#417505", "left" => "#53930B", "right" => "#488008");
+$orderOfDisplay = array(5,4,3,2,1,6);
+
+$categoryArr = $this->categoryArr;
+$subCategoryAverages = array();
+$categoryAverages = array();
+$goals = array(
+    '1' => 'Safety & Trust',
+    '2' => 'Clarity & Communication',
+    '3' => 'Collaboration & Knowledge',
+    '4' => 'Autonomy & Purpose',
+    '5' => 'Exploration & Innovation',
+    '6' => '&nbsp;',
+);
+
+$greenLevelThreshold = '3.75';
+$yellowLevelThreshold = '3.25';
+for ($level = 1; $level <= 6; $level++) {
+    foreach ($categoryArr[$level] as $category => $subCategoires)
+    {
+        $subCategoryAverages = array();
+        foreach ($subCategoires as $subCategory => $ratings) {
+            $subCategoryAverages[$subCategory] = array_sum($ratings['rating']) / count($ratings['rating']);
+        }
+
+        $categoryAverages[$level]['average'] = number_format(array_sum($subCategoryAverages) / count($subCategoryAverages),2);
+        $bgColor = ($categoryAverages[$level]['average'] >= $greenLevelThreshold) ? 'bgGreen' : (($categoryAverages[$level]['average'] >= $yellowLevelThreshold && $categoryAverages[$level]['average'] < $greenLevelThreshold) ? 'bgYellow': 'bgRed') ;
+        //$bgColor = array_rand(array('bgRed' => 'bgRed', 'bgYellow' =>'bgYellow', 'bgGreen' => 'bgGreen'), 1);
+        $categoryAverages[$level]['color'] = $color[$bgColor];
+        $categoryAverages[$level]['category'] = $category;
+
+
+    }
+}
+//print "<PRE>";print_r($categoryAverages);print "</PRE>";
+
+?>
+<h1>Global Team Health Assessment results</h1>
+<table class="tblRanking">
+    <tbody>
+    <tr>
+        <td class="tdColor"><div class="bgGreen">&nbsp;</div></td>
+        <td>High (3.75 & above)</td>
+
+        <td class="tdColor"><div class="bgYellow">&nbsp;</div></td>
+        <td>Medium (3.25 to 3.75)</td>
+
+        <td class="tdColor"><div class="bgRed">&nbsp;</div></td>
+        <td>Low (Less than 3.25)</td>
+    </tr>
+    </tbody>
+</table>
+<svg width="680px" height="556px" viewBox="0 0 1423 876" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>gpta-chart</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[5]['color']['main']; ?>" x="1" y="1" width="1421" height="98"></rect>
+        <path d="M1.5,97.5 L1421.5,97.5" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[4]['color']['main']; ?>" x="1" y="98" width="1421" height="97"></rect>
+        <path d="M1.5,194.5 L1421.5,194.5" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[3]['color']['main']; ?>" x="1" y="195" width="1421" height="97"></rect>
+        <path d="M1.5,291.5 L1421.5,291.5" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[2]['color']['main']; ?>" x="1" y="292" width="1421" height="97"></rect>
+        <path d="M1.5,388.5 L1421.5,388.5" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[1]['color']['main']; ?>" x="1" y="389" width="1421" height="97"></rect>
+        <path d="M1.5,485.5 L1421.5,485.5" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <rect id="Rectangle" fill="<?php echo $categoryAverages[6]['color']['main']; ?>" x="1" y="486" width="1421" height="97"></rect>
+        <polygon id="Triangle" fill="<?php echo $categoryAverages[5]['color']['right']; ?>" points="821 0 898 98 830 146"></polygon>
+        <polygon id="Triangle" fill="<?php echo $categoryAverages[5]['color']['left']; ?>" transform="translate(785.000000, 73.000000) scale(-1, 1) translate(-785.000000, -73.000000) " points="749 0 830 97 740 146"></polygon>
+        <g id="Level5" transform="translate(756.000000, 45.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="6" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">6</tspan>
+            </text>
+        </g>
+        <polygon id="Rectangle-2" fill="<?php echo $categoryAverages[4]['color']['left']; ?>" points="740 97 830 146 839 293 659 195"></polygon>
+        <polygon id="Rectangle-2" fill="<?php echo $categoryAverages[4]['color']['right']; ?>" points="898 98 976 195.5 839 293 830 146"></polygon>
+        <g id="Level4" transform="translate(716.000000, 165.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="5" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">5</tspan>
+            </text>
+        </g>
+        <polygon id="Rectangle-2" fill="<?php echo $categoryAverages[3]['color']['left']; ?>" points="660 194 839 292 849 441 579 292"></polygon>
+        <polygon id="Rectangle-2" fill="<?php echo $categoryAverages[3]['color']['right']; ?>" points="976 195 1053 292 849 441 839 292"></polygon>
+        <g id="Level4" transform="translate(683.000000, 288.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="4" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">4</tspan>
+            </text>
+        </g>
+        <polygon id="Rectangle-3" fill="<?php echo $categoryAverages[2]['color']['left']; ?>" points="579 292 849 441 859 587 499 389"></polygon>
+        <polygon id="Rectangle-4" fill="<?php echo $categoryAverages[2]['color']['right']; ?>" points="849 441 1053 292 1131 389 859 587"></polygon>
+        <g id="Level4" transform="translate(647.000000, 409.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="3" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">3</tspan>
+            </text>
+        </g>
+        <polygon id="Rectangle-5" fill="<?php echo $categoryAverages[1]['color']['left']; ?>" points="499 389 859 587 868 731 419 486"></polygon>
+        <polygon id="Rectangle-5" fill="<?php echo $categoryAverages[6]['color']['left']; ?>" points="420 486 868.745117 730.783203 877.62207 875.335938 340 583"></polygon>
+        <polygon id="Rectangle-6" fill="<?php echo $categoryAverages[1]['color']['right']; ?>" points="859 587 1131 389 1206 486 868 731"></polygon>
+        <polygon id="Rectangle-6" fill="<?php echo $categoryAverages[6]['color']['right']; ?>" points="868.058594 728.464844 1207 486 1282 583 877.43457 875.540039"></polygon>
+        <g id="Level4" transform="translate(611.000000, 527.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="2" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">2</tspan>
+            </text>
+        </g>
+        <g id="Level4" transform="translate(571.000000, 647.000000)" font-family="Helvetica-Bold, Helvetica" fill="#FFFFFF" font-weight="bold">
+            <text id="LEVEL" transform="translate(35.000000, 62.000000) rotate(28.000000) translate(-35.000000, -62.000000) " font-size="20">
+                <tspan x="2.7734375" y="69">LEVEL</tspan>
+            </text>
+            <text id="1" transform="translate(44.014949, 27.485855) rotate(25.000000) translate(-44.014949, -27.485855) " font-size="40">
+                <tspan x="32.8919017" y="42.4858545">1</tspan>
+            </text>
+        </g>
+        <text id="2.96" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="69"><?php echo $categoryAverages[5]['average']; ?></tspan>
+        </text>
+        <text id="High-Performing-Team" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1137.40234" y="59"><?php echo $categoryAverages[5]['category']; ?></tspan>
+        </text>
+        <text id="Self-steering-team" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1184.93359" y="155"><?php echo $categoryAverages[4]['category']; ?></tspan>
+        </text>
+        <text id="Cross-Functional-Tea" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1128.0625" y="252"><?php echo $categoryAverages[3]['category']; ?></tspan>
+        </text>
+        <text id="Aligned-Team" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1237.41016" y="349"><?php echo $categoryAverages[2]['category']; ?></tspan>
+        </text>
+        <text id="Engaged-Team" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1224.0625" y="446"><?php echo $categoryAverages[1]['category']; ?></tspan>
+        </text>
+        <text id="Technology" font-family="Helvetica-Bold, Helvetica" font-size="24" font-weight="bold" fill="#FFFFFF">
+            <tspan x="1260.09766" y="543"><?php echo $categoryAverages[6]['category']; ?></tspan>
+        </text>
+        <text id="Goal:-Exploration-&amp;" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="150" y="57">Goal: Exploration &amp; Innovation</tspan>
+        </text>
+        <text id="3.69" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="166"><?php echo $categoryAverages[4]['average']; ?></tspan>
+        </text>
+        <text id="Goal:-Autonomy-&amp;-Pur" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="150" y="154">Goal: Autonomy &amp; Purpose</tspan>
+        </text>
+        <text id="4.04" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="263"><?php echo $categoryAverages[3]['average']; ?></tspan>
+        </text>
+        <text id="Goal:-Collaboration" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="150" y="251">Goal: Collaboration &amp; Knowledge</tspan>
+        </text>
+        <text id="3.65" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="360"><?php echo $categoryAverages[2]['average']; ?></tspan>
+        </text>
+        <text id="Goal:-Clarity-&amp;-Comm" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="150" y="348">Goal: Clarity &amp; Communication</tspan>
+        </text>
+        <text id="4.01" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="457"><?php echo $categoryAverages[1]['average']; ?></tspan>
+        </text>
+        <text id="Goal:-Openness-&amp;-Tru" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="150" y="445">Goal: Openness &amp; Trust</tspan>
+        </text>
+        <text id="4.01" font-family="Helvetica-Bold, Helvetica" font-size="50" font-weight="bold" fill="#FFFFFF">
+            <tspan x="28" y="554"><?php echo $categoryAverages[6]['average']; ?></tspan>
+        </text>
+        <text id="Goal:-Infrastructure" font-family="Helvetica-Bold, Helvetica" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="152.985352" y="531">Goal: Infrastructure &amp; </tspan>
+            <tspan x="214.174805" y="553">Tooling</tspan>
+        </text>
+        <path d="M740.047988,97.6173249 L829.421173,146.266875" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <path d="M660.047988,194.617325 L838.985035,292.312799" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <path d="M579.485379,291.625766 L848.985035,441.312799" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <path d="M830,97.6601571 L897.84189,146.64955" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(863.920945, 122.154854) scale(-1, 1) translate(-863.920945, -122.154854) "></path>
+        <path d="M838.913703,195.20474 L975.009289,292.084093" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(906.961496, 243.644417) scale(-1, 1) translate(-906.961496, -243.644417) "></path>
+        <path d="M848.959375,291.936719 L1051.96484,441.325" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(950.462109, 366.630859) scale(-1, 1) translate(-950.462109, -366.630859) "></path>
+        <path d="M498.799479,389.139323 L858.985035,586.312799" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <path d="M858.959375,389.270833 L1130.7526,586.325" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(994.855990, 487.797917) scale(-1, 1) translate(-994.855990, -487.797917) "></path>
+        <path d="M419.550781,486.148438 L866.985035,729.312799" id="Line" stroke="#FFFFFF" stroke-linecap="square"></path>
+        <path d="M866.959375,486.109375 L1205.32422,729.325" id="Line" stroke="#FFFFFF" stroke-linecap="square" transform="translate(1036.141797, 607.717188) scale(-1, 1) translate(-1036.141797, -607.717188) "></path>
+    </g>
+</svg>

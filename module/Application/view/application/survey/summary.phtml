@@ -1,0 +1,34 @@
+
+
+<div>
+    <div>
+<?php
+        //messages
+        if ($this->messages) {
+            foreach ($this->messages as $message) {
+                echo "<p class='error-msg'>$message</p>";
+            }
+        } else {
+
+            echo $this->partial('quickSearch.phtml', array(
+                    'surveySearchForm' => $this->surveySearchForm,
+                    'formAction' => $this->formAction,
+                    'team' => $this->team,
+                    'user' => $this->user
+                )
+            );
+            //strengths and weakness
+            echo $this->partial('swot.phtml', array(
+                    'swot' => $this->swot
+                )
+            );
+
+            //strengths and weakness
+            echo $this->partial('summary-pie.phtml', array(
+                    'result' => $this->result
+                )
+            );
+
+        } ?>
+    </div>
+</div>

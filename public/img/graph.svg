@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="90px" height="90px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6.1 (26313) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" fill="#aaaaaa">
+            <path d="M44,42.719 L44,0.5 C32,0.804 22.006,5.498 14.262,12.981 L44,42.719 L44,42.719 Z" id="Shape"></path>
+            <path d="M46,0.5 L46,42.719 L75.738,12.98 C67.993,5.498 58,0.804 46,0.5 L46,0.5 Z" id="Shape"></path>
+            <path d="M44,48.472 L14.871,77.601 C22.551,84.746 33,89.203 44,89.5 L44,48.472 L44,48.472 Z" id="Shape"></path>
+            <path d="M0.535,47 C1.119,58 5.755,68.069 12.981,75.547 L41.527,47 L0.535,47 L0.535,47 Z" id="Shape"></path>
+            <path d="M12.399,14.68 C5.001,22.63 0.47,33.283 0.47,45 L42.719,45 L12.399,14.68 L12.399,14.68 Z" id="Shape"></path>
+            <path d="M46,48.472 L46,89.5 C57,89.203 67.448,84.746 75.129,77.601 L46,48.472 L46,48.472 Z" id="Shape"></path>
+            <path d="M47.28,45 L89.53,45 C89.53,33.283 84.998,22.631 77.6,14.68 L47.28,45 L47.28,45 Z" id="Shape"></path>
+            <path d="M48.473,47 L77.021,75.547 C84.244,68.068 88.881,58 89.465,47 L48.473,47 L48.473,47 Z" id="Shape"></path>
+        </g>
+    </g>
+</svg>

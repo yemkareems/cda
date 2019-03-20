@@ -1,0 +1,62 @@
+<h1>Global Team Health Assessment results</h1>
+
+<table class="tblRanking">
+    <tbody>
+    <tr>
+        <td class="tdColor"><div class="bgGreen">&nbsp;</div></td>
+        <td>High (3.75 & above)</td>
+
+        <td class="tdColor"><div class="bgYellow">&nbsp;</div></td>
+        <td>Medium (3.25 to 3.75)</td>
+
+        <td class="tdColor"><div class="bgRed">&nbsp;</div></td>
+        <td>Low (Less than 3.25)</td>
+    </tr>
+    </tbody>
+</table>
+
+<?php
+
+$categoryArr = $this->categoryArr;
+$subCategoryAverages = array();
+$categoryAverages = array();
+$goals = array(
+    '1' => 'Safety & Trust',
+    '2' => 'Clarity & Communication',
+    '3' => 'Collaboration & Knowledge',
+    '4' => 'Autonomy & Purpose',
+    '5' => 'Exploration & Innovation',
+    '6' => '&nbsp;',
+);
+$orderOfDisplay = array(5,4,3,2,1,6);
+
+$greenLevelThreshold = '3.75';
+$yellowLevelThreshold = '3.25';
+
+$html = '<table class="tblRapport"><tbody>';
+
+foreach ($orderOfDisplay as $level) {
+    foreach ($categoryArr[$level] as $category => $subCategoires)
+    {
+        $subCategoryAverages = array();
+        foreach ($subCategoires as $subCategory => $ratings) {
+            $subCategoryAverages[$subCategory] = array_sum($ratings['rating']) / count($ratings['rating']);
+        }
+
+        $categoryAverages[$category] = array_sum($subCategoryAverages) / count($subCategoryAverages);
+        $bgColor = ($categoryAverages[$category] >= $greenLevelThreshold) ? 'bgGreen' : (($categoryAverages[$category] >= $yellowLevelThreshold && $categoryAverages[$category] < $greenLevelThreshold) ? 'bgYellow': 'bgRed') ;
+
+        $html .= '<tr>';
+        $html .= '<td width="30%" class="'.$bgColor.' tdShadow tdScore">'. number_format($categoryAverages[$category], 2) .'</td>';
+        $html .= '<td class="'.$bgColor.' tdShadow tdData">';
+        $html .= '<div class="pLevel">Level '. $level .' </div>';
+        $html .= '<div class="pTitle">'. ucwords($category) .'</div>';
+        $html .= '<div class="pGoal">Goal : '. ucwords($goals[$level]) .'</div>';
+        $html .= '</td>';
+        $html .= '</tr>';
+    }
+}
+
+$html .='</tbody></table>';
+
+echo $html;

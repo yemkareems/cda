@@ -1,0 +1,95 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath('css/custom/app.css'), 'screen,print')
+                        ->prependStylesheet($this->basePath('css/custom/normalize.css'), 'screen,print')
+                        ->prependStylesheet($this->basePath('css/dataTables.jqueryUi.min.css'), 'screen,print')
+                        ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'), 'screen,print')
+                        ->prependStylesheet($this->basePath('css/bootstrap.min.css'), 'screen,print')
+                        ->prependStylesheet($this->basePath('css/style.css'), 'screen,print')
+
+        ; ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath('js/custom/what-input.min.js'))
+            ->prependFile($this->basePath('js/dataTables.jqueryUi.min.js'))
+            ->prependFile($this->basePath('js/jquery.dataTables.min.js'))
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery.min.js'))
+            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+        ; ?>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+
+                        <?php if ($this->layout()->userAuthenticated) { ?>
+
+                            <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+
+                            <?php if ($this->layout()->userRole == \Application\Entity\Role::HPTA_ADMIN) { ?>
+                                <li class="active"><a href="<?php echo $this->url('question-add') ?>"><?php echo $this->translate('Question') ?></a></li>
+                                <li class="active"><a href="<?php echo $this->url('company-add') ?>"><?php echo $this->translate('Company') ?></a></li>
+                            <?php } ?>
+                            <?php if ($this->layout()->userRole == \Application\Entity\Role::COMPANY_ADMIN) { ?>
+                                <li class="active"><a href="<?php echo $this->url('team-add') ?>"><?php echo $this->translate('Team') ?></a></li>
+                                <li class="active"><a href="<?php echo $this->url('team-member-add') ?>"><?php echo $this->translate('Team Member') ?></a></li>
+                            <?php } ?>
+                            <?php if ($this->layout()->userRole == \Application\Entity\Role::TEAM_MEMBER) { ?>
+                                <li class="active"><a href="<?php echo $this->url('survey-radar') ?>"><?php echo $this->translate('Survey') ?></a></li>
+                            <?php } ?>
+
+                            <li class="active"><a href="<?php echo $this->url('logout') ?>"><?php echo $this->translate('Logout') ?></a></li>
+
+                        <?php } ?>
+
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+        <div class="container">
+            <?php
+                $messages = $this->flashMessenger()->getMessages();
+                foreach($messages as $message) {
+                    echo "<p>$message</p>";
+                }
+            ?>
+            <?php echo $this->content; ?>
+            <hr>
+            <footer>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+    </body>
+
+    <style>
+        th {cursor: pointer;}
+        table.dataTable th { background-color: darkslategrey; color:white;  }
+        table.dataTable tr:nth-child(even)  { background-color: #cccccc;  }
+        table.dataTable tr:nth-child(odd)  { background-color: #ffffff;  }
+    </style>
+</html>

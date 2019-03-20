@@ -1,0 +1,25 @@
+<div class="divIndex font100 fontBlue">
+    <p>Global</p>
+    <p>Team Health</p>
+    <p>Report</p>
+<hr class="bigHr">
+
+</div>
+<div class="divIndex fontBlue">
+<?php
+$team = $this->team->getName();
+echo "Team ".$team;
+?>
+</div>
+
+<style>
+    @media print {
+        .bigHr {
+            background-color: dimgrey !important;
+            color: dimgrey !important;
+            border: solid 2px dimgrey !important;
+            height: 2px !important;
+            width: 60%;
+        }
+    }
+</style>

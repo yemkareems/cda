@@ -1,0 +1,46 @@
+<div>
+    <div>
+<?php
+        //messages
+        if ($this->messages) {
+            foreach ($this->messages as $message) {
+                echo "<p class='error-msg'>$message</p>";
+            }
+        } else {
+            echo $this->partial('quickSearch.phtml', array(
+                    'surveySearchForm' => $this->surveySearchForm,
+                    'formAction' => $this->formAction,
+                    'team' => $this->team,
+                    'user' => $this->user
+
+                )
+            );
+            //strengths and weakness
+            echo $this->partial('swot.phtml', array(
+                    'swot' => $this->swot
+                )
+            );
+?>
+            <div id="vis"></div>
+
+            <script src="/js/d3.js" charset="utf-8"></script>
+            <script src="/js/d3.chart.min.js"></script>
+            <script src="/js/d3.chart.layout.hierarchy.js"></script>
+            <script>
+                (function() {
+                    d3.json('<?php echo $this->url('survey-tree-json'); ?>/<?php echo $this->team->getId(); ?>/'+ $('#selectYear').val() +'/'+ $('#selectQuarter').val(), function(error, json) {
+                        var tree = d3.select("#vis").append("svg")
+                                .chart("tree.radial")
+                                .diameter(1000)
+                                .radius(function(d) { if( d.size ) return d.rating * Math.log(d.size)/5; else return 3; })
+                                .levelGap(150)
+                                .zoomable([0.3, 3])
+                                .collapsible(1)
+                                .duration(500);
+                        tree.draw(json);
+                    });
+                }());
+            </script>
+        <?php } ?>
+    </div>
+</div>

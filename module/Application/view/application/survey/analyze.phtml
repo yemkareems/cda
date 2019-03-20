@@ -1,0 +1,123 @@
+<div>
+    <div>
+        <?php
+        echo $this->partial('quickSearch.phtml', array(
+        'surveySearchForm' => $this->surveySearchForm,
+        'formAction' => $this->formAction,
+        'team' => $this->team,
+        'user' => $this->user
+
+        )
+        );
+        ?>
+
+        <h2>Overview</h2>
+        <br/>
+        <p>
+            <a class="aExpand" href="#">Expand All</a> | <a class="aCollapse" href="#">Collapse All</a>
+        </p>
+        <br/>
+
+        <?php
+        //messages
+        if ($this->messages) {
+            foreach ($this->messages as $message) {
+                echo "<p class='error-msg'>$message</p>";
+            }
+        } else {
+            $subcategories = $this->subcategories;
+            $questions = $this->questions;
+            $answers = $this->answers;
+            $comments = $this->comments;
+            $empDetail = $this->empDetail;
+
+            foreach ($this->categories as $catName => $catData) {
+                echo "<p class='ttlCategory'><span class='spnToggle'>+</span>". ucfirst($catName ) ."</p>";
+                echo "<div>";
+                foreach ($catData['subcategories'] as $subcatId => $subcatData) {
+                    echo "<p class='ttlSubcategory'><span class='spnToggle'>+</span>". ucfirst($subcategories[$subcatId]['name']) ."</p>";
+                    echo "<div>";
+                    foreach ($subcategories[$subcatId]['questions'] as $qId => $question) {
+                        echo "<p class='ttlQuestion'>". ucfirst($question) ."</p>";
+
+                        foreach ($answers[$qId] as $empId => $answer) {
+
+                            echo "<p class='ttlAnswer'>" . ucfirst($answer). ' <i>'.$empDetail[$empId] . "</i></p>";
+                            if (isset($comments[$qId][$empId]) && trim($comments[$qId][$empId]) != '') {
+                                echo "<p class='ttlComment'> Comment : " . ucfirst($comments[$qId][$empId]) . "</p>";
+                            }
+                        }
+                    }
+                    echo "</div>";
+                }
+                echo "</div>";
+            }
+        } ?>
+    </div>
+</div>
+
+<style>
+    .ttlCategory + div, .ttlSubcategory + div {
+        display: none;
+    }
+    .ttlCategory{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .ttlSubcategory{
+        font-weight: bold;
+        font-size: 13px;
+        padding-left: 50px;
+    }
+    .ttlQuestion{
+        font-weight: bold;
+        font-size: 11px;
+        padding-left: 100px;
+    }
+    .ttlAnswer{
+        font-weight: bold;
+        font-size: 13px;
+        padding-left: 150px;
+    }
+    .ttlComment{
+        font-size: 12px;
+        padding-left: 150px;
+        font-style: italic;
+        color: orangered;
+    }
+    .spnToggle {
+        padding: 0px 5px;
+        background-color: #000000;
+        color: #ffffff;
+        font-weight: bold;
+        margin-right: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .spnToggle:hover {
+        background-color: #1AA7B8;
+    }
+    a {
+        font-size: 12px;
+    }
+</style>
+
+<script>
+    $('.spnToggle').click(function(){
+        //alert($(this).parent().innerHtml());
+        $(this).parent().next().toggle();
+        if ($(this).text() == '+') {
+            $(this).text('-');
+        } else {
+            $(this).text('+');
+        }
+    });
+    $('.aExpand').click(function(){
+        $('.spnToggle').parent().next().show();
+        $('.spnToggle').text('-');
+    });
+    $('.aCollapse').click(function(){
+        $('.spnToggle').parent().next().hide();
+        $('.spnToggle').text('+');
+    });
+</script>

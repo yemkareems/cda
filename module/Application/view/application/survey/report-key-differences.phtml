@@ -1,0 +1,102 @@
+<?php
+$deviationSummaryBySubCategory = $this->deviationSummaryBySubCategory;
+$options = $this->answerOptions;
+
+$differences = array_chunk($deviationSummaryBySubCategory, 5, 1);
+$differences = $differences[0];
+
+
+
+$html .= '<br/>';
+
+
+foreach ($differences as $subcategory => $rating) {
+    //print  "<div>$subcategory Score </div>";
+    foreach($this->strengthWeaknessSummary as $category => $detailSubCategories){
+        foreach($detailSubCategories as $detailSubCategory => $questions) {
+            if ($subcategory == $detailSubCategory) {
+                $displayList = array();
+                foreach ($questions as $qid => $qDetails) {
+
+                    if($qDetails['standard_deviation'] > 0.6) {
+
+                        $globalDisplayList[] = $qDetails;
+                    }
+
+                }
+            }
+        }
+    }
+}
+$globalDisplayList = array_chunk($globalDisplayList,4,1);
+$html .= '
+        <div class="divTable">
+        <div class="divTableBody">
+        <div class="divTableRow even">
+        <div class="divTableCell"><strong>Question</strong></div>
+        <div class="divTableCell"><strong>Fundamental</strong></div>
+        <div class="divTableCell"><strong>Level</strong></div>
+        <div class="divTableCell"><strong>Avg Score</strong></div>
+        </div>
+        ';
+foreach($globalDisplayList as $k1 => $displayValues) {
+    foreach ($displayValues as $k => $displayItem) {
+        if($k % 2 == 1) {
+            $class = "even";
+
+        } else {
+            $class = 'odd';
+        }
+        $avg_rating = number_format($displayItem['total_rating'] / $displayItem['rating_count'], 2);
+
+        $html .= "<div class='divTableRow $class'>";
+        $html .= '<div class="divTableCell"><div>' . ucfirst($displayItem['question']) . '</div></div>';
+        $html .= '<div class="divTableCell"><div>' . ucfirst($displayItem['subcategory']) . '</div></div>';
+        $html .= '<div class="divTableCell"><div>' . $displayItem['category'] . '</div></div>';
+        $html .= '<div class="divTableCell"><div>' . $avg_rating . '</div></div>';
+        $html .= '</div>';
+
+
+        $html .= "<div class='divTableRow $class'>";
+        $html .= '
+    <div class="divTableCell">
+    <div>
+    <div class="divTable">
+    <div class="divTableBody">
+    <div class="divTableRow">
+    ';
+        foreach ($options as $option) {
+            $html .= '<div class="divTableCell"><div>' . $option . '</div></div>';
+        }
+    $html .= '
+
+
+    </div>
+    <div class="divTableRow">';
+        foreach ($options as $key => $option) {
+            $html .= '<div class="divTableCell"><div>'  . (isset($displayItem['individual_rating_count'][$key]) ? $displayItem['individual_rating_count'][$key] : 0)  . '</div></div>';
+        }
+        $html .= '
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="divTableCell">&nbsp;</div>
+    <div class="divTableCell">&nbsp;</div>
+    <div class="divTableCell">&nbsp;</div>
+
+    </div>
+        ';
+    }
+    if($k1 != count($globalDisplayList)-1) {
+        $html .= '<div class="page-break"></div>';
+        $html .= '<br class="page-break-br"/>';
+    }
+
+
+}
+$html .='</div></div>';
+
+echo $html;

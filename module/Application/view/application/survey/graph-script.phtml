@@ -1,0 +1,228 @@
+<script src="/js/d3.v3.min.js"></script>
+<script src="/js/d3-tip.js"></script>
+<link rel="stylesheet" href="/css/aster-style.css" />
+<br>
+<br><br><br><br><br><br><br><br>
+<div id="svg">
+
+</div>
+
+<script>
+    var cYear = $('#selectYear').val();
+    var cQuarter = $('#selectQuarter').val();
+
+    var cDate = new Date();
+    if (typeof cYear == 'undefined') {
+        cYear = cDate.getFullYear();
+    }
+    if (typeof cQuarter == 'undefined') {
+        cQuarter = Math.ceil(cDate.getMonth() / 3);
+    }
+
+    var margin = {top: 30, right: 180, bottom: 40, left: 280};
+    var width = 500,
+        height = 500,
+        radius = Math.min(width, height) / 2,
+        innerRadius = 0.2 * radius;
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d.width; });
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([0, 0])
+        .html(function(d) {
+            return d.data.label + ": <span style='color:"+d.data.color+"'>" + d.data.score + "%</span>";
+        });
+    var arc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(function (d) {
+            return (radius - innerRadius) * (d.data.score / 100) + innerRadius;
+        });
+    var outlineArc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(radius);
+    var svg = d3.select("#svg").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+    svg.call(tip);
+
+    var screenWidth = window.innerWidth;
+
+    var smargin = {left: 10, top: 10, right: 10, bottom: 10},
+        swidth = Math.min(screenWidth, 500) - margin.left - margin.right,
+        sheight = Math.min(screenWidth, 500) - margin.top - margin.bottom;
+
+
+
+    var arc1 = d3.svg.arc()
+        .innerRadius(swidth*12.5/2)
+        .outerRadius(swidth*12.5/2 + 30);
+
+    //Creates function that will turn the month data into start and end angles
+    var pie1 = d3.layout.pie()
+        .value(function(d) { return d.endDateID - d.startDateID; })
+        .padAngle(.01)
+        .sort(null);
+
+    var catData = [
+        {month: "Source Code Management", 	startDateID: 0, 	endDateID: 60},
+        {month: "Continuous Integration",     startDateID: 60, 	endDateID: 120},
+        {month: "Test Automation", 	startDateID: 120, 	endDateID: 180},
+        {month: "Release Management", 	startDateID: 180, 	endDateID: 240},
+        {month: "Fail Safes", 	startDateID: 240, 	endDateID: 300},
+        {month: "Team Culture", 	startDateID: 300, 	endDateID: 360},
+    ];
+
+    var colorScale1 = d3.scale.linear()
+        .domain([0,1,2,3,4,5])
+        //.range(["#fb4a45", "#ffcc00", "#4285f4","#259c39","#af67ce","#eaad70"])
+        .range(["#E0E0E0", "#E0E0E0", "#E0E0E0","#E0E0E0","#E0E0E0","#E0E0E0"])
+        .interpolate(d3.interpolateHcl);
+
+
+    csv_str = '"id","order","score","weight","color","label","rating","total"'+
+    +'"FIS",1,2.3,1,"#C7E89E","Personal development"';
+    d3.csv('<?php echo $this->url('survey-graph-csv'); ?>/<?php echo $this->team->getId(); ?>/'+ cYear +'/'+ cQuarter, function(error, data) {
+        data.forEach(function(d) {
+            d.id     =  d.id;
+            d.order  = +d.order;
+            d.color  =  d.color;
+            d.weight = +d.weight;
+            d.score  = +d.score;
+            d.width  = +d.weight;
+            d.label  =  d.label;
+            d.rating  =  d.rating;
+            d.total  =  d.total;
+            d.category  =  d.category;
+        });
+        // for (var i = 0; i < data.score; i++) { console.log(data[i].id) }
+        var outerGroup = svg.selectAll(".solidArc")
+            .data(pie(data))
+            .enter()
+            .append("g")
+        outerGroup
+            .append("path")
+            .attr("fill", function(d) { return d.data.color; })
+            .attr("class", "solidArc")
+            .attr("stroke", "gray")
+            .attr("d", arc)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+        outerGroup
+            .append("text")
+            .attr("transform", function(d) {
+                return "translate(" + centroid(70, width, d.startAngle, d.endAngle) + ")";
+            })
+            .attr("text-anchor", "middle")
+            .attr("dy", "5px")
+            .attr("dx", function(d) {
+                var a = angle(d, 0,0);
+                return a < 0 ? "90px" : "-90px";
+            })
+            .attr("text-anchor", function(d) {
+                var a = angle(d, 0, 0);
+                return a <= 0 ? "start" : "end";
+            }).attr("transform", function(d) { //set text's origin to the centroid
+                // Make sure to set these before calling arc.centroid
+                return "rotate(" + angle(d, -90, 90) + ")";
+            })
+            .text(function(d) { return d.data.label.substr(0,17) + '... (' + d.data.rating + ' / '+ d.data.total+')' });
+
+
+
+        svg.selectAll(".monthArc")
+            .data(pie1(catData))
+            .enter().append("path")
+            .attr("class", "monthArc")
+            .attr("id", function(d,i) { return "monthArc_"+i; })
+            .attr("d", arc1)
+            .style("fill", function(d,i) {
+                return colorScale1(i); //Other
+            });
+        svg.selectAll(".monthText")
+            .data(catData)
+            .enter().append("text")
+            .attr("class", "monthText")
+            .attr("dy", 18) //Move the text down
+            .append("textPath")
+            .attr("startOffset",'22%')
+            .style('text-anchor','middle')
+            .attr("xlink:href",function(d,i){return "#monthArc_"+i;})
+            .text(function(d){return d.month;})
+            .on('click', function(d){
+                if(this.timerID){
+                    clearTimeout(this.timerID);
+                    this.timerID=null;
+                    $(".outlineArc").each(
+                        function(i, obj){
+                            category = $(this).attr("category");
+                            $(obj).attr("fill","none");
+
+                        }
+                    );
+                } else {
+                    this.timerID=setTimeout(function(){
+                        this.timerID=null;
+
+                        $(".outlineArc").each(
+                            function(i, obj){
+                                category = $(this).attr("category");
+                                if(d.month == category) {
+                                    $(obj).attr("fill","none");
+                                } else {
+                                    $(obj).attr("fill","gray");
+                                    $(obj).attr("fill-opacity","0.8");
+
+                                }
+                            }
+                        );
+                    },500)}
+            });
+
+
+
+        var outerPath = svg.selectAll(".outlineArc")
+            .data(pie(data))
+            .enter().append("path")
+            .attr("fill", "none")
+            .attr("stroke", "gray")
+            .attr("class", "outlineArc")
+            .attr("category", function(d) { //set text's origin to the centroid
+                // Make sure to set these before calling arc.centroid
+                return d.data.category;
+                //return "rotate(" + angle(d, -90, 90) + ")";
+            })
+            .attr("d", outlineArc);
+        // calculate the weighted mean score
+        var score =
+            data.reduce(function(a, b) {
+                //console.log('a:' + a + ', b.score: ' + b.score + ', b.weight: ' + b.weight);
+                return parseFloat(a) + parseFloat(b.rating);
+            }, 0);
+
+        var total =
+            data.reduce(function(a, b) {
+                //console.log('a:' + a + ', b.score: ' + b.score + ', b.weight: ' + b.weight);
+                return parseFloat(a) + parseFloat(b.total);
+            }, 0);
+
+        svg.append("svg:text")
+            .attr("class", "aster-score")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle") // text-align: right
+            .text( Math.round((score / total)*100) + '%' );
+        function centroid(innerR, outerR, startAngle, endAngle){
+            var r = (innerR + outerR) / 2, a = (startAngle + endAngle) / 2 - (Math.PI / 2);
+            return [ Math.cos(a) * r, Math.sin(a) * r ];
+        }
+        // Updated Angle Calculation Function...
+        function angle(d, offset, threshold) {
+            var a = (d.startAngle + d.endAngle) * 90 / Math.PI + offset;
+            return a > threshold ? a - 180 : a;
+        }
+
+    });
+
+</script>

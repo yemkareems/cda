@@ -1,0 +1,61 @@
+<?php
+    echo "<div id='swot'>";
+    echo "<div class='top-five hint'>Top<p>5</p><div class='down'>&rsaquo;</div><span class='hintTextLeft'>Strengths & weakness</span></div>";
+    foreach ($this->swot as $type => $values) {
+        echo "<div class='swot-section'>";
+        echo "<h4>Top 5 ". ucfirst($type) ."</h4>";
+        foreach ($values as $string => $rating) {
+            $catArr = explode('/', $string);
+            echo "<p>". $rating ."<span class='hint'> : ". ucfirst($catArr[1]) ."<span class='hintText'>". ucfirst($catArr[0]) ."</span></span></p>";
+        }
+        echo "</div>";
+    }
+    echo "</div>";
+?>
+
+<style>
+    .swot-section {
+        display: none;
+        z-index: 2500 !important;
+        margin-top: 15px;
+    }
+    .top-five {
+        display: none;
+        text-align: center;
+        width: 60px;
+        height: 90px;
+        background-color: #2f3238;
+        border-radius: 5px;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        float: right;
+        margin-top: -185px;
+        margin-right: 10px;
+    }
+    .top-five:hover {
+        background-color: #1AA7B8;
+    }
+    .top-five p {
+        color: white !important;
+        font-size: 50px !important;
+        margin-top: -10px;
+    }
+    .down {
+        color: white;
+        margin-top: -43px !important;
+        margin-left: 10px !important;
+        font-weight: bold;
+        font-size: 40px !important;
+        padding: 0px !important;
+        transform: rotate(90deg);
+
+    }
+</style>
+
+<script>
+    $('.top-five').click(function(){
+        $('.swot-section').fadeToggle();
+    });
+</script>

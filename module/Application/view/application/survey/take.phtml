@@ -1,0 +1,68 @@
+<div>
+    <div>
+        <?php
+            $subcategory = $this->subcategory;
+            //echo "<h2>Survey : ". ucfirst($subcategory->getCategory()->getName()) ." > ". ucfirst($subcategory->getName()) ."</h2>";
+            //echo "<h2>Survey (". $subcategory->getId() ."/". $this->totalPageCount .")</h2>";
+            echo "<h3>".$subcategory->getCategory()->getName(). ' >> '.$subcategory->getName()."</h3>";
+
+            /*for ($i=1; $i<=$this->totalPageCount; $i++) {
+                echo "<span class='spnPageNumber'><a href='". $this->url($this->formAction, array('subcategoryId' => $i)) ."'>$i</a></span>";
+            }*/
+
+            //messages
+            if ($this->messages) {
+                foreach ($this->messages as $message) {
+                    echo "<p class='error-msg'>$message</p>";
+                }
+            }
+            $questions = $this->questions;
+            $answers = $this->answers;
+            $comment = $this->comment;
+
+            //survey form
+            $form = $this->surveyForm;
+            $form->setAttribute('action', $this->url($this->formAction, array('subcategoryId' => $subcategory->getId())));
+            $form->prepare();
+
+            $options = $this->answerOptions;
+
+            echo $this->form()->openTag($form);
+            foreach ($questions as $question) {
+                echo "<div class='question-section'>";
+                echo "<label>". $question->getQuestion() ."</label><br/>";
+                foreach ($question->getOptions() as $value => $label) {
+                    $checked = '';
+                    if($label->getWeightage() == '0' && $answers[$question->getId()] == '0') {
+                        $checked = ' checked ';
+                    } else {
+                        $checked = ($label->getWeightage() == $answers[$question->getId()] && $answers[$question->getId()] != '') ? ' checked ' : '';
+
+                    }
+                    //print $label->getWeightage().'===='.$answers[$question->getId()]."=$checked==".($label->getWeightage() == $answers[$question->getId()]);
+                    echo "<input type='radio' name='question-". $question->getId() ."' id='".$label->getWeightage(). $question->getId() ."' value='".$label->getWeightage()."' $checked> <label style='cursor:pointer;' for =".$label->getWeightage().$question->getId().">".$label->getDisplay()."</label><br>";
+                }
+                //echo "Comment: <input type='text'  name='comment-". $question->getId() ."' value='". $comment[$question->getId()] ."'> ";
+                echo "<label for='txtcomment-". $question->getId() ."' style='cursor:pointer;'>Comment: </label> <textarea rows='15' cols='100' id='txtcomment-". $question->getId() ."'  style='padding:5px;margin-top:-5px;height:200px;' name='comment-". $question->getId() ."'>". $comment[$question->getId()] ."</textarea>";
+
+                echo "</div>";
+            }
+
+            $showButton = "next";
+            if($subcategory->getId() >= $this->totalPageCount) {
+                $showButton = "finish";
+            }
+            echo "<div class='rating-submit-div'>";
+            if($subcategory->getId() != 1) {
+                $previousLink = $this->url($this->formAction, array('subcategoryId' => $this->previous));
+                echo "<a class='rating-submit' href='$previousLink'><< Previous</a> &nbsp; " . $this->formRow($form->get($showButton)) ;
+            } else {
+                echo  $this->formRow($form->get($showButton)) ;
+            }
+            echo "&nbsp;&nbsp;".$this->formRow($form->get('save')) ;
+            echo "</div>";
+
+            echo $this->form()->closeTag($form);
+        ?>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<?php
+
+$html = "
+<h4>Root Causes</h4>
+<p>
+The following root causes were identified for the bottlenecks listed in the previous section. These root causes were found by examining each bottleneck individually. The following is a consolidated list that was developed after examining dependencies and duplication.
+</p>
+<p><b>E.g.</b></p>
+<ul>
+    <li>Lack of automation, especially release and deployment automation.</li>
+</ul>
+
+<h4>DevOps Practices</h4>
+ <p>
+The following DevOps capabilities were recommended to the <u>Organization</u> <u>Line of Business</u> division to address the bottlenecks in their delivery pipeline and enable them to embark on their DevOps transformation journey.
+</p>
+<p><b>E.g.</b></p>
+<ul>
+<li>Automation
+    <br/><br/>
+    <b><u>Goal</u></b>
+    <br/><br/>
+    Introduce automation tools for the following four areas:
+    <ul>
+        <li>Deploy</li>
+        <li>Environment-build and maintenance</li>
+        <li>Test</li>
+        <li>Release</li>
+    </ul>
+    Automation provides the capability to make processes repeatable, reliable, and scalable.
+    <br/><br/>
+    <b><u>Business and technical benefits</u></b>
+    <br/><br/>
+    During the assessment, several areas of inefficiency were identified that can be addressed by introducing automation. These inefficiencies result in significant business impact by causing waste and increased wait-times:
+    <ul>
+        <li>An inefficient ticketing system is used by cross-functional teams to communicate.</li>
+        <li>Manual testing takes multiple days to complete.</li>
+        <li>Regression testing is automated but still requires multiple days and is conducted too late in the delivery life cycle.</li>
+        <li>Deployments for full releases are manual and done in batches with significant wait times, which create overhead costs.</li>
+        <li>Dev-test-prod environments do not use the same middleware and configurations.</li>
+    </ul>
+    <br/>
+    The following recommendations were listed as the first to be adopted because they have the most significant return on investment that can be achieved quickly.
+    <br/><br/>
+
+";
+
+echo $html;

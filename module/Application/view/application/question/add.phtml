@@ -1,0 +1,240 @@
+<div>
+    <div>
+        <?php
+        //messages
+        if ($this->messages) {
+            foreach ($this->messages as $message) {
+                echo "<p class='error-msg'>$message</p>";
+            }
+        }
+        //add form
+        $form = $this->questionAddForm;
+        $form->prepare();
+
+        echo $this->form()->openTag($form);
+        echo "<div class='column pull-left'><label class='block' for='selectRadar'>Radar</label>";
+        echo $this->formRow($form->get('radar'));
+        echo "</div>";
+        echo "<div class='column pull-left'><label class='block' for='selectCategory'>Category</label>";
+        echo $this->formRow($form->get('category'));
+        echo "</div>";
+        echo "<div class='column pull-left'><label class='block' for='selectSubcategory'>Sub category</label>";
+        echo $this->formRow($form->get('subcategory'));
+        echo "</div>";
+        echo "<div class='column pull-left'><label class='block' for='textQuestion'>Question</label>";
+        echo $this->formRow($form->get('question'));
+        echo "</div>";
+        echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+        echo $this->formRow($form->get('submit'));
+        echo "</div>";
+        echo $this->form()->closeTag($form);
+        ?>
+    </div>
+    <table id="tblList" class="tbl">
+        <thead class="trHead">
+        <tr>
+            <th width="50%">Question</th>
+            <th width="15%">Category</th>
+            <th width="25%">Sub Category</th>
+            <th width="10%">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="trItem"></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var preSelectedSubcategory = "<?php echo $form->get('subcategory')->getValue(); ?>";
+    $(document).ready(function(){
+        $('#radar').change(function(){
+            refreshCategories();
+        });
+        $('#selectCategory').change(function(){
+            refreshSubcategories();
+        });
+
+        refreshSubcategories();
+        refreshList();
+    });
+
+    function refreshCategories()
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('radar-categories') ?>",
+            dataType: "json",
+            type    : "POST",
+            data    : "radar="+ $('#selectRadar').val(),
+            success : function(data) {
+                preSelectedSubcategory = '';
+                $('#selectCategory').find('option').remove();
+                $.each(data, function(index, value){
+                    var newOption = $('<option value="'+index+'"'+selectedHtml+' >'+value+'</option>');
+                    $('#selectCategory').append(newOption);
+                });
+            }
+
+        });
+    }
+    function refreshSubcategories()
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('radar-category-subcategories') ?>",
+            dataType: "json",
+            type    : "POST",
+            data    : "category="+ $('#selectCategory').val(),
+            success : function(data) {
+                $('#selectSubcategory').find('option').remove();
+                $.each(data, function(index, value){
+                    selectedHtml = (index == preSelectedSubcategory) ? ' selected ' : '';
+                    var newOption = $('<option value="'+index+'"'+ selectedHtml +' >'+value+'</option>');
+                    $('#selectSubcategory').append(newOption);
+                });
+            }
+
+        });
+    }
+    function refreshList()
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('question-list') ?>",
+            dataType: "json",
+            type    : "GET",
+            async   : false,
+            success : function(data) {
+                var i = 1;
+                $('.trItem').remove();
+                $.each(data, function(index, item){
+                    var itemHtml = "<tr class='trItem'>";
+                    itemHtml += "<td><span class='qLabel'>"+item.question+"</span><input type='text' class='qText' size='50' value='"+item.question+"'/></td>";
+                    itemHtml += "<td>"+item.category+"</td>";
+                    itemHtml += "<td>"+item.subcategory+"</td>";
+                    itemHtml += "<td>";
+                    itemHtml += "<a class='linkUpdate' href='javascript:void(0)' qid='"+item.id+"' title='Edit'></a>";
+                    itemHtml += "<a class='linkCancel' href='javascript:void(0)' qid='"+item.id+"' title='Cancel'></a>";
+                    itemHtml += "<a class='linkSave' href='javascript:void(0)' qid='"+item.id+"' title='Save'></a>";
+                    itemHtml += "<a class='linkDelete' href='javascript:void(0)' qid='"+item.id+"' title='Delete'></a>";
+                    itemHtml += "</td>";
+                    itemHtml += "</tr>";
+                    var newOption = $(itemHtml);
+                    $('#tblList').append(newOption);
+                    i++;
+                });
+                if (data.length <= 0) {
+                    var newOption = $("<tr><td colspan='5'>No items found !</td></tr>");
+                    $('#tblList').append(newOption);
+                }
+                initEditAction();
+                initCancelAction();
+                initSaveAction();
+                initDeleteAction();
+                initDataTable();
+            }
+        });
+    }
+    function initEditAction()
+    {
+        $('.linkUpdate').click(function(){
+            resetEditLinks();
+            showEditLinks($(this));
+        });
+    }
+    function initCancelAction()
+    {
+        $('.linkCancel').click(function(){
+            hideEditLinks($(this));
+        });
+    }
+    function initSaveAction()
+    {
+        $('.linkSave').click(function(){
+            updateItem($(this));
+        });
+    }
+    function initDeleteAction()
+    {
+        $('.linkDelete').click(function(){
+            deleteItem($(this));
+        });
+    }
+    function updateItem(qObj)
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('question-update') ?>",
+            dataType: "json",
+            type    : "POST",
+            data    : "id="+ qObj.attr('qid') +"&question="+ qObj.parent().parent().find('.qText').val(),
+            async   : false,
+            success : function(status) {
+                if (status) {
+                    //refreshList();
+                    $( location ).attr("href", "<?php echo $this->url('question-add') ?>");
+                } else {
+                    alert ("Unable to update the question. Please try again.");
+                }
+            }
+        });
+    }
+    function deleteItem(qObj)
+    {
+        $.ajax({
+            url     : "<?php echo $this->url('question-delete') ?>",
+            dataType: "json",
+            type    : "POST",
+            data    : "id="+ qObj.attr('qid'),
+            async   : false,
+            success : function(status) {
+                if (status) {
+                    //refreshList();
+                    $( location ).attr("href", "<?php echo $this->url('question-add') ?>");
+                } else {
+                    alert ("Question cannot be deleted, as we have team member entries found for this.");
+                }
+            }
+        });
+    }
+    function initDataTable()
+    {
+        $('#tblList').dataTable({
+            paginate : true,
+            ordering : true,
+            order : [],
+            info : true,
+            filter : true,
+            retrieve : true
+        });
+    }
+    function resetEditLinks()
+    {
+        $('.qLabel').show();
+        $('.qText').hide();
+
+        $('.linkUpdate').show();
+        $('.linkCancel').hide();
+        $('.linkSave').hide();
+    }
+    function showEditLinks(obj)
+    {
+        obj.parent().parent().find('.qLabel').hide();
+        obj.parent().parent().find('.qText').show();
+
+        //added to avoid the bug of trimming the text with single/double quotes
+        obj.parent().parent().find('.qText').val(obj.parent().parent().find('.qLabel').text());
+
+        obj.parent().parent().find('.qText').focus();
+
+        obj.parent().parent().find('.linkUpdate').hide();
+        obj.parent().parent().find('.linkCancel').show();
+        obj.parent().parent().find('.linkSave').show();
+    }
+    function hideEditLinks(obj)
+    {
+        obj.parent().parent().find('.qLabel').show();
+        obj.parent().parent().find('.qText').hide();
+
+        obj.parent().parent().find('.linkUpdate').show();
+        obj.parent().parent().find('.linkCancel').hide();
+        obj.parent().parent().find('.linkSave').hide();
+    }
+</script>

@@ -1,0 +1,45 @@
+<br/>
+<h1>Areas of Key Differences</h1>
+<p>
+    The spider graph below highlights the sections where your individual team members scores differ in a significant matter.
+    You can identify each team members individual score by following the coloured lines in the graph. The larger the gap
+    between the scores the bigger the difference in understanding on these topics within the team. Because alignment is an
+    important condition to reach high performance, addressing these topics is needed. See the ‘Practices and activities for
+    improvement-section’ in the back of this report for tips on how to address these topics in an effective way.
+</p>
+<div id="chart_radar"></div>
+
+<script src="/js/d3.js"></script>
+<script src="/js/RadarChart.js"></script>
+<script>
+    var w = 400,
+        h = 400;
+    var colorscale = d3.scale.category20();
+    //Legend titles
+    var LegendOptions = [];
+    //Data
+    var d = <?php echo $this->result;?>;
+    //Options for the Radar chart, other than default
+    var mycfg = {
+        w: w,
+        h: h,
+        maxValue: 5,
+        levels: 5,
+        ExtraWidthX: 300
+    };
+    //Call function to draw the Radar chart
+    //Will expect that data is in %'s
+    RadarChart.draw("#chart_radar", d, mycfg);
+
+    ////////////////////////////////////////////
+    /////////// Initiate legend ////////////////
+    ////////////////////////////////////////////
+
+    var chart_radar = d3.select('#chart_radar')
+        .selectAll('svg')
+        .append('svg')
+        .attr("width", w + 700)
+        .attr("height", h)
+
+    //Create the title for the legend
+</script>

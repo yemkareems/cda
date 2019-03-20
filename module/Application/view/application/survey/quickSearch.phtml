@@ -1,0 +1,113 @@
+<?php
+use Application\Entity\Role;
+?>
+<?php
+    echo "<h4>Assessment results for team : ". ucfirst($this->team->getName()) ."</h4>";
+
+    echo "<div id='surveyQuickSearch'>";
+    $form = $this->surveySearchForm;
+    $form->setAttribute('action', $this->url($this->formAction, array('teamId' => $this->team->getId())));
+    $form->prepare();
+
+    echo $this->form()->openTag($form);
+    echo "<div class='column pull-left'><label class='block' for='selectYear'>Year</label>";
+    echo $this->formRow($form->get('year'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block' for='selectQuarter'>Quarter</label>";
+    echo $this->formRow($form->get('quarter'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitSummary'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitGraph'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitTree'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitBarGraph'));
+    echo "</div>";
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitRadar'));
+    echo "</div>";
+    if($this->user->getEmployeeDetails()->getRole()->getName() == Role::COMPANY_ADMIN) {
+        echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+        echo $this->formRow($form->get('submitAnalyze'));
+        echo "</div>";
+    }
+/*
+    echo "<div class='column pull-left'><label class='block'>&nbsp;</label>";
+    echo $this->formRow($form->get('submitReport'));
+    echo "</div>";
+*/
+
+    echo $this->form()->closeTag($form);
+    echo "</div>";
+?>
+
+<!-- Color codes for progress -->
+<p>
+<div class="divLvls">
+    <span class="lvlRed"></span><label>Low</label>
+    <span class="lvlYellow"></span><label>Medium</label>
+    <span class="lvlOrange"></span><label>High</label>
+    <span class="lvlGreen"></span><label>Excellent</label>
+</div>
+<br><br>
+</p>
+<style>
+    .divLvls {
+        float: left;
+        margin-right: 5px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    .divLvls span {
+        padding: 3px 8px 2px 8px;
+        margin-right: 4px;
+        margin-left: 30px;
+    }
+    .divLvls label {
+        font-size: 13px;
+    }
+    .lvlRed {
+        background-color: #ea4335;
+    }
+    .lvlYellow {
+        background-color: #e08128;
+    }
+    .lvlOrange {
+        background-color: #fbbc05;
+    }
+    .lvlGreen {
+        background-color: #34a853;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function(){
+        $('#btnRadar').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('survey-radar', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnGraph').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('survey-graph', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnTree').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('survey-tree', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnBarGraph').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('survey-bar', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnSummary').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('survey-summary', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnReport').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('generate-report', array('teamId' => $this->team->getId())); ?>");
+        });
+        $('#btnAnalyze').mouseenter(function(){
+            $('#surveySearch').attr('action', "<?php echo $this->url('generate-analyze', array('teamId' => $this->team->getId())); ?>");
+        });
+    });
+</script>

@@ -1,0 +1,142 @@
+<?php
+    $categoryArr = $this->categoryArr;
+    $options = $this->answerOptions;
+    $subCategoryAverages = array();
+    $categoryAverages = array();
+    $goals = array(
+        '1' => 'Safety & Trust',
+        '2' => 'Clarity & Communication',
+        '3' => 'Collaboration & Knowledge',
+        '4' => 'Autonomy & Purpose',
+        '5' => 'Exploration & Innovation',
+        '6' => '&nbsp;',
+    );
+    $orderOfDisplay = array(5,4,3,2,1,6);
+
+    $greenLevelThreshold = '3.75';
+    $yellowLevelThreshold = '3.25';
+
+    $html .= '<h1>General overview</h1>';
+    /*
+    $html .= '<table class="tblOptions"><tr>';
+    foreach ($options as $key => $option) {
+        $html .= '<td>' . $option . '</td>';
+    }
+    $html .='</tr><tr>';
+    foreach ($options as $key => $option) {
+        $html .= '<td>' . $key . '</td>';
+    }
+    $html .= '</tr></table>';
+    */
+
+    foreach ($orderOfDisplay as $level) {
+        foreach ($categoryArr[$level] as $category => $subCategoires)
+        {
+            $subCategoryAverages = array();
+            foreach ($subCategoires as $subCategory => $ratings) {
+                $subCategoryAverages[$subCategory] = array_sum($ratings['rating']) / count($ratings['rating']);
+            }
+            $variableName = 'level'.$level.'Average';
+            $$variableName = $categoryAverages[$category] = array_sum($subCategoryAverages) / count($subCategoryAverages);
+            $bgColor = ($categoryAverages[$category] >= $greenLevelThreshold) ? 'bgGreen' : (($categoryAverages[$category] >= $yellowLevelThreshold && $categoryAverages[$category] < $greenLevelThreshold) ? 'bgYellow': 'bgRed') ;
+            /*
+            $html .= '<p class="pProgress">';
+            $html .= '<label class="spnTitle">'. ucwords($category).'</label>';
+            $html .= '<label class="spnProgress '. $bgColor .'" style="width:'. ($categoryAverages[$category] * 80) .'px;">&nbsp;</label>';
+            $html .= '<label>&nbsp;'. number_format($categoryAverages[$category], 2) .'</label>';
+            $html .= '</p>';
+            */
+        }
+    }
+
+?>
+
+<?php
+
+$html .= "<h1>Technology</h1>";
+if($level6Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this area is high, which indicates that your global team has a solid technological
+    fundament and your tooling facilitates communication and collaboration over geographical distance. ';
+} elseif($level6Average>=$yellowLevelThreshold && $level6Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this area is medium, which indicates that your team needs to improve on technology
+    and tooling to be able to work together effectively in a global set-up. ';
+} else {
+    $html .= '<b>Low</b> : Your score in this area is low, which indicates that your global team faces big challenges on
+    the side of technology and tooling and is severely limited in communicating and collaborating in a global set-up. ';
+}
+
+
+$html .= "<h1>Level 1: Engaged Team</h1>";
+if($level1Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this level is high, which shows that your global team has a solid fundament on trust and safety,
+    which means that team members feel engaged with the work and with each other, are comfortable to contribute, admit their
+    mistakes and ask for help.';
+} elseif($level1Average>=$yellowLevelThreshold && $level1Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this level is medium, which shows that your global team needs to build more safety and trust.
+    Only with trust and safety team members feel engaged to the work and to each other and are more comfortable with contributing
+    to the work and to meetings, admitting mistakes and asking for help.';
+} else {
+    $html .= '<b>Low</b> : Your score in this level is low, which shows that your global team has a lack of trust and safety which makes
+    team members reluctant to engage and uncomfortable with being open and admitting their mistakes or ask for help.';
+}
+
+$html .= "<h1>Level 2: Aligned Team</h1>";
+if($level2Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this level is high, which indicates your global team has clarity in terms of goals and expected
+    behaviours and team members are aligned on the level of personal and team objectives. These objectives act as guidelines for
+    communication, decision making and planning. ';
+} elseif($level2Average>=$yellowLevelThreshold && $level2Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this level is medium, which indicates your global team needs to establish more clarity on why the
+    team exists, what is the connection between each team members personal goals and the teams goal, how members will behave, how the
+    team will work together and who does what in the team.';
+} else {
+    $html .= '<b>Low</b> : Your score in this level is low, which indicates your global team lacks clarity on why the team exists, what is the
+    connection between each team members personal goals and the teams goal, how members will behave, how the team will work together
+    and who does what in the team.';
+}
+
+$html .= "<h1>Level 3: Cross functional Team</h1>";
+if($level3Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this level is high, which shows your global team is highly cross-functional and has focus
+    on collaboration and knowledge sharing.';
+} elseif($level3Average>=$yellowLevelThreshold && $level3Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this level is medium, which shows your global team needs to improve in collaborating and
+    sharing knowledge to become a true cross-functional team.';
+} else {
+    $html .= '<b>Low</b> : Your score in this level is low, which shows that you need to structurally improve in collaborating and
+    sharing knowledge. To increase performance the team needs to develop a mindset and practices to learn from each other
+    through giving and receiving effective feedback and to share knowledge (both business and technical) on a regular basis.';
+}
+
+$html .= "<h1>Level 4: Self-steering Team</h1>";
+if($level4Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this level is high, which indicates that your global team is able to confront each other
+    with performance and behavioural concerns, shows discipline and takes full responsibility for and ownership of results.
+    Your team has purpose and is highly motivated.';
+} elseif($level4Average>=$yellowLevelThreshold && $level4Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this level is medium, which indicates that your global team has room for improvement in
+    confronting each other with concerns on performance and behaviour and on taking responsibility for and ownership of the results.
+    Motivation is not optimal.';
+} else {
+    $html .= '<b>Low</b> : Your score in this level is low, which indicates that your global team is hesitant in confronting one another
+    about performance and behaviour and does not take responsibility for and ownership of the results. Motivation and purpose are
+    lacking.';
+}
+
+$html .= "<h1>Level 5: High Performing Team</h1>";
+if($level5Average >= $greenLevelThreshold) {
+    $html .= '<b>High</b> : Your score in this level is high, which indicates your global team engages in communication outside the
+    team, explores new ideas and fresh perspectives from outside sources, integrates these and innovates new products and/or
+    services. High performing teams radiate their energy throughout the organization and are aware of the impact their work
+    has on organizational level.';
+} elseif($level5Average>=$yellowLevelThreshold && $level5Average<$greenLevelThreshold) {
+    $html .= '<b>Medium</b> : Your score in this level is medium, which indicates your global team can improve awareness on the impact
+    the work has on the organization and could grow from exploring new ideas and fresh perspectives from outside sources to
+    start innovating new products and/or services. ';
+} else {
+    $html .= '<b>Low</b> : Your score in this level is low, which indicates your global team is hampered in reaching high performance.
+    There seems to be a lack of awareness on the impact the work has on the organization and a need to start seeking new ideas
+    and fresh perspectives from outside sources to be able to innovate new products and/or services.';
+}
+
+echo $html;

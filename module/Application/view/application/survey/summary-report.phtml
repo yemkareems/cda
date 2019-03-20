@@ -1,0 +1,71 @@
+<div class="divReport">
+    <!--<a class="btnDownload linkButton" href="<?php /*echo $this->url('report-pdf', array('teamId' => $this->team->getId())); */?>">Download Report</a>-->
+    <a class="btnPrint linkButton" href="javascript:print();">Print</a>
+    <?php
+    echo $this->partial('report-header.phtml');
+    echo $this->partial('report-index.phtml', array('team' => $this->team));
+    echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('report-description-1.phtml');
+        echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('report-description-2.phtml');
+        echo $this->partial('report-footer.phtml');
+/*
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('report-ladder.phtml', array(
+            'teamLevels' => $this->teamLevels,
+            'categoryArr' => $this->categoryArr
+        ));
+        echo $this->partial('report-footer.phtml');*/
+
+    print '<div class="page-break"></div>';
+
+    echo $this->partial('report-header.phtml');
+    echo $this->partial('report-pyramid.phtml', array(
+        'categoryArr' => $this->categoryArr
+    ));
+    echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('overview.phtml', array(
+            'teamLevels' => $this->teamLevels,
+            'categoryArr' => $this->categoryArr,
+            'answerOptions' => $this->answerOptions
+        ));
+        echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('strength-graph-script.phtml', array('team' => $this->team));
+        echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('weakness-graph-script.phtml', array('team' => $this->team));
+        echo $this->partial('report-footer.phtml');
+
+    print '<div class="page-break"></div>';
+
+        echo $this->partial('report-header.phtml');
+        echo $this->partial('report-key-differences-radar-script.phtml', array(
+            'result' => $this->result,
+            'legends' => $this->legends
+            )
+        );
+        echo $this->partial('report-footer.phtml');
+
+    ?>
+</div>

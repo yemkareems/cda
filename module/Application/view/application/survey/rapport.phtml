@@ -1,0 +1,86 @@
+<div>
+    <div>
+<?php
+    //messages
+    if ($this->messages) {
+        foreach ($this->messages as $message) {
+            echo "<p class='error-msg'>$message</p>";
+        }
+    } else {
+        echo $this->partial('quickSearch.phtml', array(
+                'surveySearchForm' => $this->surveySearchForm,
+                'formAction' => $this->formAction,
+                'team' => $this->team,
+                'user' => $this->user
+
+            )
+        );
+        //strengths and weakness
+        echo $this->partial('swot.phtml', array(
+                'swot' => $this->swot
+            )
+        );
+?>
+
+        <table class="tblRapport">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td rowspan="5" class="tdVertical tdVerticalLeft bgOrange tdShadow">
+                        <p class="pTitle">Adopting <br/>& <br/>Following <br/>Scrum Practices</p>
+                        <div class="sVertical">
+                            G<br/>O<br/>V<br/>E<br/>R<br/>N<br/>A<br/>N<br/>C<br/>E
+                        </div>
+                    </td>
+                    <td class="bgRed tdShadow">
+                        <p class="pLevel">Level 5 </p>
+                        <p class="pTitle">High Performing Team</p>
+                        <p class="pGoal">Goal : Continuous improvement & Innovation</p>
+                    </td>
+                    <td rowspan="5" class="tdVertical tdVerticalRight bgOrange tdShadow">
+                        <p class="pTitle">Agile <br/>& <br/>Responsive <br/>Mindset</p>
+                        <div class="sVertical">
+                            C<br/>U<br/>L<br/>T<br/>U<br/>R<br/>E
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bgBlue tdShadow">
+                        <p class="pLevel">Level 4 </p>
+                        <p class="pTitle">Self Managing Team</p>
+                        <p class="pGoal">Goal : Discipline & Purpose</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bgGreen tdShadow">
+                        <p class="pLevel">Level 3 </p>
+                        <p class="pTitle">Cross-functional Team</p>
+                        <p class="pGoal">Goal : Commitment & Autonomy</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bgViolet tdShadow">
+                        <p class="pLevel">Level 2 </p>
+                        <p class="pTitle">Engaged Team</p>
+                        <p class="pGoal">Goal : Clarity & Engagement</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bgPink tdShadow">
+                        <p class="pLevel">Level 1 </p>
+                        <p class="pTitle">Bonded Team</p>
+                        <p class="pGoal">Goal : Safety & Energy</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="bgOrange">
+                        <span class="sHorizontal">TECHNOLOGY</span>
+                        <p class="pTitle">Creating an optimal virtual work environment</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    <?php } ?>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<?php
+
+$html = "
+<h3>DevOps Adoption Roadmap</h3>
+<h4>Business Drivers</h4>
+<p>
+<u>List all the business drivers for the <u>Line of Business</u> of <u>Organization</u> that were identified in the assessment</u>
+</p>
+<p><b>E.g.</b></p>
+<ul>
+<li>To increase quality—both of products and software.
+    <ul>
+    <li>
+    The goal is to reduce downtime and outages experienced by clients.
+    </li>
+    </ul>
+</li>
+</ul>
+
+<h4>Existing IT Initiatives</h4>
+
+<p><u>Organization</u> was actively addressing the challenges it faced, even before this assessment. Multiple initiatives are in flight or planned. These initiatives are listed here and have been incorporated into the final adoption roadmap.</p>
+
+<p><b>E.g.</b></p>
+<ul>
+<li>Automation of environment provisioning
+    <ul>
+    <li>
+    This initiative refers specifically to full-stack environments that might be deployed. <u>Organization</u> is currently exploring cloud environment provisioning and orchestration tools.
+    </li>
+    </ul>
+</li>
+</ul>
+
+<h4>Bottlenecks</h4>
+
+<p>The value stream mapping exercise conducted during the assessment identified the following bottlenecks in the delivery pipeline of the <u>Line of Business/Division Name</u> at <u>Organization</u>. The assessment attendees had picked one exemplar pipeline for <u>application name</u> for the purposes of the value stream mapping exercise.</p>
+
+<p><b>E.g.</b></p>
+<ul>
+<li>Deployment and release management:
+    <ul>
+    <li>
+    Deployment is manual, very costly, and time-consuming. Approximately 35 to 40 full-time employees are required to do deployments into dev/test/prod environments.
+    </li>
+    <li>
+    The batch size for a business release is very large; there can be up to 20 projects in a single release, so all these projects need to be coordinated and timed as a single release.
+    </li>
+    <li>
+    There is interlock between multiple projects in a business release at the design phase, and then again at system test, but nothing in between; this results in several integration challenges being identified too late.
+    </li>
+    </ul>
+</li>
+</ul>
+
+";
+
+echo $html;

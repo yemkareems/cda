@@ -1,0 +1,202 @@
+<?php
+$result = $this->result;
+$categories = array_keys($result);
+
+print "<BR>";
+
+echo "<table id='tblSummary'>";
+echo "<tr>";
+echo "<td class='tblSummaryHeadersCol'><div class='emptyCol'></div></td>";
+echo "<TD class='tblSummaryHeadersCol'><div>Beginner</div></TD>";
+echo "<TD class='tblSummaryHeadersCol'><div>Basic</div></TD>";
+echo "<TD class='tblSummaryHeadersCol'><div>Intermediate</div></TD>";
+echo "<TD class='tblSummaryHeadersCol'><div>Expert</div></TD>";
+echo "<TD class='tblSummaryHeadersCol'><div>Champion</div></TD>";
+echo "</tr>";
+
+$fillcolor = array();
+$fillcolor[0] = "#ea4335";
+$fillcolor[1] = "#ea4335";
+$fillcolor[2] = "#e08128";
+$fillcolor[3] = "#fbbc05";
+$fillcolor[4] = "#34a853";
+$fillcolor[5] = "#34a853";
+
+$divident = 25;
+
+foreach ($categories as $k => $category) {
+
+    echo "<tr>";
+    $subCat = array_keys($result[$category]);
+
+    $html = '';
+    $catScore = 0; $catTotal = 0;
+    for($i=0;$i<=4;$i++){
+        if (isset($subCat[$i])) {
+            $catScore = $catScore + $result[$category][$subCat[$i]]['rating'];
+            $catTotal = $catTotal + $result[$category][$subCat[$i]]['total'];
+
+            $percentage = ($result[$category][$subCat[$i]]['rating'] * 100) / $result[$category][$subCat[$i]]['total'];
+            $key = ceil($percentage/$divident);
+            $scoreColorStyle = "color: ". $fillcolor[$key] .";";
+
+            $html .=  "<TD class='tdInfo'>";
+            $html .=  "<p class='pSubcatName'>" . $subCat[$i] . "</p>";
+            $html .= "<p class='pSubcatScore'>";
+            $html .= "<div class='divScore'>";
+            $number = floor($result[$category][$subCat[$i]]['rating']) == $result[$category][$subCat[$i]]['rating'] ? floor($result[$category][$subCat[$i]]['rating']) : $result[$category][$subCat[$i]]['rating'];
+            $html .= "<span class='subcatScore' style='$scoreColorStyle'>" . $number . "</span>";
+            $html .= "<span class='subcatScoreCap'> /" . $result[$category][$subCat[$i]]['total'] . "</span>";
+            $html .= "</div>";
+            $html .= "<div class='divProgress' data-value='$percentage' data-color='". $fillcolor[$key] ."'></div>";
+            $html .= "</p>";
+            $html .= "</TD>";
+        } else {
+            $html .= "<td>&nbsp;</td>";
+        }
+    }
+
+    $percentage = ($catScore * 100) / $catTotal;
+    $key = ceil($percentage/$divident);
+
+    $progressFillColor = "#ffffff";
+    $progressStyle = "background-size: " . $percentage . "% 100%; background-image: linear-gradient(to right, ". $progressFillColor .", ". $progressFillColor .");";
+    $headerHorzStyle = "background-color: ". $fillcolor[$key] . ";";
+
+    echo "<td class='tblSummaryHeadersRow' style='$headerHorzStyle'>";
+    echo "<p class='pCatName'>$category</p>";
+    echo "<p class='pCatScore'>";
+    echo "<span class='subcatScore'>" . $catScore . "</span>";
+    echo "<span class='subcatScoreCap'> /" . $catTotal . "</span>";
+    echo "</p>";
+    echo "<p class='pCatProgress'>";
+    echo "<div class='divSubcatBg' style='". $progressStyle ."'>";
+    echo "<div class='divSubcat'>";
+    echo "</div>";
+    echo "</div>";
+    echo "</p>";
+    echo "</td>";
+
+    echo $html;
+
+    echo "</tr>";
+}
+
+
+echo "</table>";
+
+?>
+
+<style>
+    #tblSummary {
+        margin-top: 15px;
+        background-color: white;
+        width: 100%;
+    }
+    tr:first-child {
+        background-color: white;
+        height: 50px !important;
+/*
+        box-shadow: 0px 0px 0px #ffffff;
+*/
+    }
+    tr {
+        height: 96px;
+
+    }
+    td {
+        padding-left: 10px;
+        width: 200px;
+        box-shadow: 0px 8px 5px -5px #888888 inset;
+        -webkit-box-shadow:0px 8px 5px -5px #888888 inset;
+        -moz-box-shadow:0px 8px 5px -5px #888888 inset;
+    }
+    .tdInfo {
+        border-right: 1px solid #cccccc;
+    }
+    .tblSummaryHeadersCol {
+        font-weight: bold;
+        font-size: 14px;
+        color: white;
+        text-align: center;
+        padding-left: 0px;
+    }
+    .tblSummaryHeadersCol div {
+        width: 100%;
+        height: 45px;
+        margin-top: 4px;
+        z-index: 1;
+        position: absolute;
+        padding-top: 15px;
+        position: relative;
+    }
+    .tblSummaryHeadersRow {
+        color: #454649;
+        width: 203px;
+        padding-top: 8px;
+    }
+    .pCatName{
+        height: 30px;
+        font-weight: bold;
+        font-size: 12px !important;
+    }
+    .pSubcatName {
+        font-weight: bold;
+        font-size: 12px !important;
+        padding-top: 6px;
+    }
+    .pCatScore {
+        margin-top: -10px;
+    }
+    .pCatProgress {
+        width: 70%;
+    }
+    .pSubcatName {
+        height: 30px;
+    }
+    .divSubcatBg {
+        background-color: #c0c0c0;
+        background-repeat: no-repeat;
+        border-radius: 5px;
+        width: 70%;
+    }
+    .divSubcat {
+        width: 70%;
+        height: 4px;
+        padding-left: 5px;
+    }
+    .subcatScore {
+        font-size: 22px;
+    }
+    .subcatScoreCap {
+        font-size: 11px;
+    }
+    .divScore {
+        float: left;
+        padding-top: 8px;
+    }
+    .divProgress {
+        float: right;
+        padding-right: 10px;
+    }
+    .emptyCol {
+        height: 45px !important;
+        /*box-shadow: 0px 3px 5px #888888;*/
+    }
+</style>
+
+<script>
+    $('.divProgress').each(function(){
+        var value = $(this).attr('data-value');
+        var color = $(this).attr('data-color');
+
+        $(this).circleProgress({
+            value: value/100,
+            size: 40,
+            thickness: 6,
+            fill: {
+                color: color
+            }
+        });
+    });
+</script>

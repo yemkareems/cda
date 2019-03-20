@@ -1,0 +1,29 @@
+
+<div id="chart_radar"></div>
+
+<script src="/js/d3.js"></script>
+<script src="/js/RadarChart.js"></script>
+<script>
+    var w = 600,
+        h = 600;
+    var colorscale = d3.scale.category20();
+    //Legend titles
+    var LegendOptions = <?php echo $this->legends;?>;
+    //Data
+    var d = <?php echo $this->result;?>;
+    //Options for the Radar chart, other than default
+    var mycfg = {
+        w: w,
+        h: h,
+        maxValue: 5,
+        levels: 5,
+        ExtraWidthX: 300
+    };
+    //Call function to draw the Radar chart
+    //Will expect that data is in %'s
+    RadarChart.draw("#chart_radar", d, mycfg);
+    ////////////////////////////////////////////
+    /////////// Initiate legend ////////////////
+    ////////////////////////////////////////////
+
+</script>

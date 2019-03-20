@@ -1,0 +1,77 @@
+<?php
+
+$categoryArr = $this->categoryArr;
+foreach ($categoryArr as $level => $category) {
+    foreach ($category as $subCategories) {
+        foreach ($subCategories as $subCategory => $ratings) {
+            $subCategoryAverages[$subCategory] = array_sum($ratings['rating']) / count($ratings['rating']);
+        }
+    }
+}
+arsort($subCategoryAverages);
+
+$strengths = array_chunk($subCategoryAverages, 5, 1);
+$strengths = $strengths[0];
+
+
+$html .= '
+<div class="divTable">
+<div class="divTableBody">
+<div class="divTableRow even">
+<div class="divTableCell"><strong>Fundamental</strong></div>
+<div class="divTableCell"><strong>Question</strong></div>
+<div class="divTableCell"><strong>Level</strong></div>
+<div class="divTableCell"><strong>Avg Score</strong></div>
+</div>
+';
+
+foreach ($strengths as $subcategory => $rating) {
+    //$html .= "<div>$subcategory Score $rating</div>";
+    foreach($this->strengthWeaknessSummary as $category => $detailSubCategories){
+        foreach($detailSubCategories as $detailSubCategory => $questions) {
+
+            if ($subcategory == $detailSubCategory) {
+                $displayList = array();
+                foreach ($questions as $qid => $qDetails) {
+                    $avg_rating = number_format($qDetails['total_rating']/$qDetails['rating_count'], 2);
+                    $displayList[$avg_rating][] = array(
+                        'category' => $category,
+                        'subcategory' => $subcategory,
+                        'question' => $qDetails['question'],
+                        'rating' => $avg_rating
+                    );
+                }
+                //display top 1 from each category
+                krsort($displayList, 1);
+                $displayList = array_shift($displayList);
+                foreach ($displayList as $displayItem) {
+                    $globalDisplayList[] = $displayItem;
+                }
+            }
+        }
+    }
+}
+$i = 1;
+foreach ($globalDisplayList as $k => $displayItem) {
+    //if($i % 10 == 1)
+    if($k % 2 == 1) {
+        $class = "even";
+
+    } else {
+        $class = 'odd';
+    }
+    $html .= "<div class='divTableRow $class'>";
+    $html .= '<div class="divTableCell"><div>' . ucfirst($displayItem['subcategory']) . '</div></div>';
+    $html .= '<div class="divTableCell"><div>' . ucfirst($displayItem['question']) . '</div></div>';
+    $html .= '<div class="divTableCell"><div>' . $displayItem['category'] . '</div></div>';
+    $html .= '<div class="divTableCell"><div>' . $displayItem['rating'] . '</div></div>';
+    $html .= '</div>';
+    $i++;
+    if($i % 10 == 1){
+        $html .= '<div class="page-break"></div>';
+    }
+}
+$html .='</div></div>';
+
+echo $html;
+

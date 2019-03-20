@@ -1,0 +1,129 @@
+<script src="/js/d3.js"></script>
+<script src="/js/d3-tip.js"></script>
+<link rel="stylesheet" href="/css/aster-style.css" />
+<h1>Areas of improvement</h1>
+<p>
+    In the spider graph shown below, the sections in which your team scored lowest are highlighted. To improve the performance
+    of your team it is critical you understand these issues and address them. Note that scores below 3.00 can be considered
+    particularly low.
+</p>
+<div id ="weakness"></div>
+
+<script>
+    var cYear = $('#selectYear').val();
+    var cQuarter = $('#selectQuarter').val();
+
+    var cDate = new Date();
+    if (typeof cYear == 'undefined') {
+        cYear = cDate.getFullYear();
+    }
+    if (typeof cQuarter == 'undefined') {
+        cQuarter = Math.ceil(cDate.getMonth() / 3);
+    }
+
+    var margin = {top: 30, right: 0, bottom: 0, left: 80};
+    var width = 500,
+        height = 500,
+        radius = Math.min(width, height) / 2,
+        innerRadius = 0.2 * radius;
+    var pie_weakness = d3.layout.pie()
+        .sort(null)
+        .value(function(d) { return d.width; });
+    var tip_weakness = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([0, 0])
+        .html(function(d) {
+            return d.data.label + ": <span style='color:orangered'>" + d.data.score + "</span>";
+        });
+    var arc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(function (d) {
+            return (radius - innerRadius) * (d.data.score / 5) + innerRadius;
+        });
+    var outlineArc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(radius);
+    var svg_weakness = d3.select("#weakness").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+    svg_weakness.call(tip_weakness);
+    csv_str = '"id","order","score","weight","color","label"'+
+    +'"FIS",1,2.3,1,"#C7E89E","Personal development"';
+    d3.csv('<?php echo $this->url('graph-csv-weakness'); ?>/<?php echo $this->team->getId(); ?>/'+ cYear +'/'+ cQuarter, function(error, data) {
+        data.forEach(function(d) {
+            d.id     =  d.id;
+            d.order  = +d.order;
+            d.color  =  d.color;
+            d.weight = +d.weight;
+            d.score  = +d.score;
+            d.width  = +d.weight;
+            d.label  =  d.label;
+        });
+        // for (var i = 0; i < data.score; i++) { console.log(data[i].id) }
+        var outerGroup = svg_weakness.selectAll(".solidArc")
+            .data(pie_weakness(data))
+            .enter()
+            .append("g")
+        outerGroup
+            .append("path")
+            .attr("fill", function(d) { return d.data.color; })
+            .attr("class", "solidArc")
+            .attr("stroke", "gray")
+            .attr("d", arc)
+            .on('mouseover', tip_weakness.show)
+            .on('mouseout', tip_weakness.hide);
+        outerGroup
+            .append("text")
+            .attr("transform", function(d) {
+                return "translate(" + centroid(70, width, d.startAngle, d.endAngle) + ")";
+            })
+            .attr("text-anchor", "middle")
+            .attr("dy", "5px")
+            .attr("dx", function(d) {
+                var a = angle(d, 0,0);
+                return a < 0 ? "90px" : "-90px";
+            })
+            .attr("text-anchor", function(d) {
+                var a = angle(d, 0, 0);
+                return a <= 0 ? "start" : "end";
+            }).attr("transform", function(d) { //set text's origin to the centroid
+                // Make sure to set these before calling arc.centroid
+                return "rotate(" + angle(d, -90, 90) + ")";
+            })
+            .text(function(d) { return d.data.label });
+        var outerPath = svg_weakness.selectAll(".outlineArc")
+            .data(pie_weakness(data))
+            .enter().append("path")
+            .attr("fill", "none")
+            .attr("stroke", "gray")
+            .attr("class", "outlineArc")
+            .attr("d", outlineArc);
+        // calculate the weighted mean score
+        var score =
+            data.reduce(function(a, b) {
+                //console.log('a:' + a + ', b.score: ' + b.score + ', b.weight: ' + b.weight);
+                return a + (b.score * b.weight);
+            }, 0) /
+            data.reduce(function(a, b) {
+                return a + b.weight;
+            }, 0);
+        svg_weakness.append("svg:text")
+            .attr("class", "aster-score")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle") // text-align: right
+            .text(Math.round( score * 10 ) / 10);
+        function centroid(innerR, outerR, startAngle, endAngle){
+            var r = (innerR + outerR) / 2, a = (startAngle + endAngle) / 2 - (Math.PI / 2);
+            return [ Math.cos(a) * r, Math.sin(a) * r ];
+        }
+        // Updated Angle Calculation Function...
+        function angle(d, offset, threshold) {
+            var a = (d.startAngle + d.endAngle) * 90 / Math.PI + offset;
+            return a > threshold ? a - 180 : a;
+        }
+
+    });
+
+</script>
